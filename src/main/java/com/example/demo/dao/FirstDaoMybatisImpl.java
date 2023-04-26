@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 public class FirstDaoMybatisImpl implements FirstDao {
     @Override
     public String select() {
-        return "hello, mybatis!";
+        return "hello, Git && mybatis!";
     }
 }
