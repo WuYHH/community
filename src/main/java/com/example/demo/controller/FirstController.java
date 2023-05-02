@@ -1,14 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.FirstService;
+import com.example.demo.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
@@ -123,5 +126,41 @@ public class FirstController {
         emp.put("age", 23);
         emp.put("salary", 25000);
         return emp;
+    }
+
+    @RequestMapping(path = "/cookie/set", method = RequestMethod.GET)
+    @ResponseBody
+    public String setCookie(HttpServletResponse response) {
+        // 创建cookie
+        Cookie cookie = new Cookie("testCookie", CommunityUtil.generateUUID());
+        // 设置生效的路径
+        cookie.setPath("/community/first");
+        // 设置存活时间
+        cookie.setMaxAge(60 * 10);
+        response.addCookie(cookie);
+        return "set cookie success !";
+    }
+
+    @RequestMapping(path="/cookie/get", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookie(@CookieValue("testCookie") String testCookie) {
+        System.out.println(testCookie);
+        return "get Cookie success !";
+    }
+
+    @RequestMapping(path="/session/set", method = RequestMethod.GET)
+    @ResponseBody
+    public String setSession(HttpSession httpSession) {
+        httpSession.setAttribute("id", CommunityUtil.generateUUID());
+        httpSession.setAttribute("name", "Demo");
+        return "set Session";
+    }
+
+    @RequestMapping(path="/session/get", method = RequestMethod.GET)
+    @ResponseBody
+    public String getSession(HttpSession httpSession) {
+        System.out.println(httpSession.getAttribute("id"));
+        System.out.println(httpSession.getAttribute("name"));
+        return "get Session";
     }
 }
