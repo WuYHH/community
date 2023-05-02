@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dao.UserMapper;
 import com.example.demo.entity.User;
+import com.example.demo.util.ActivationStatus;
 import com.example.demo.util.CommunityUtil;
 import com.example.demo.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,7 @@ import java.util.Random;
  * @date 2023/4/24 16:08
  */
 @Service
-public class UserService {
+public class UserService implements ActivationStatus {
 
     @Autowired
     private UserMapper userMapper;
@@ -88,11 +89,26 @@ public class UserService {
         Context context = new Context();
         context.setVariable("email", user.getEmail());
         // http://localhost:8080/community/activation/101/code
-        String url = domain + contextPath + "/activation" + user.getId() + "/" + user.getActivationCode();
+        String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活账号", content);
         // 注册成功则返回空的map
         return map;
+    }
+
+    // 激活
+
+    public int activation(int userId, String activationCode) {
+        User user = userMapper.selectById(userId);
+        // 重复激活
+        if (user.getStatus() == 1) {
+            return ACTIVATION_REPEAT;
+        } else if (user.getActivationCode().equals(activationCode)) {
+            userMapper.updateStatus(userId, 1);
+            return ACTIVATION_SUCCESS;
+        } else {
+            return ACTIVATION_FAILURE;
+        }
     }
 }
