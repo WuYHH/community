@@ -43,7 +43,7 @@ public class UserService implements ActivationStatus {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
-    public User findById(int id) {
+    public User findUserById(int id) {
         return userMapper.selectById(id);
     }
 
@@ -164,5 +164,9 @@ public class UserService implements ActivationStatus {
 
     public void logout(String ticket) {
         loginTicketMapper.updateStatus(ticket, 1);
+    }
+
+    public LoginTicket findLoginTicket(String ticket) {
+        return loginTicketMapper.selectTicket(ticket);
     }
 }
