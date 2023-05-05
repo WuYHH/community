@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.LoginTicketMapper;
 import com.example.demo.dao.UserMapper;
+import com.example.demo.entity.LoginTicket;
 import com.example.demo.entity.User;
 import com.example.demo.util.ActivationStatus;
 import com.example.demo.util.CommunityUtil;
@@ -28,6 +30,9 @@ public class UserService implements ActivationStatus {
     private UserMapper userMapper;
 
     @Autowired
+    private LoginTicketMapper loginTicketMapper;
+
+    @Autowired
     private MailClient mailClient;
 
     @Autowired
@@ -42,6 +47,10 @@ public class UserService implements ActivationStatus {
         return userMapper.selectById(id);
     }
 
+    /**
+     * @param user
+     * @return 注册可能会有多种结果，所以返回值为Map<></>
+     */
     public Map<String, Object> register(User user) {
         Map<String, Object> map = new HashMap<>();
         //
@@ -110,5 +119,50 @@ public class UserService implements ActivationStatus {
         } else {
             return ACTIVATION_FAILURE;
         }
+    }
+
+    public Map<String, Object> login(String username, String password, int expiredSeconds) {
+        Map<String, Object> res = new HashMap<>();
+        if (StringUtils.isBlank(username)) {
+            res.put("usernameMsg", "账户名不能为空");
+            return res;
+        }
+
+        if (StringUtils.isBlank(password)) {
+            res.put("passwordMsg", "密码不能为空");
+            return res;
+        }
+
+        User user = userMapper.selectByName(username);
+        if (user == null) {
+            res.put("usernameMsg", "该账户不存在！");
+            return res;
+        }
+
+        if (user.getStatus() == 0) {
+            res.put("usernameMsg", "该账户未激活！");
+            return res;
+        }
+
+        if (user.getPassword().equals(CommunityUtil.md5(password + user.getSalt()))) {
+            res.put("passwordMsg", "用户密码错误！");
+            return res;
+        }
+
+        // 登录成功，发放凭证
+        LoginTicket ticket = new LoginTicket();
+        ticket.setUserId(user.getId());
+        ticket.setStatus(0);
+        ticket.setTicket(CommunityUtil.generateUUID());
+        ticket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
+        loginTicketMapper.insertTicket(ticket);
+        // 发放给客户端
+        res.put("ticket", ticket.getTicket());
+
+        return res;
+    }
+
+    public void logout(String ticket) {
+        loginTicketMapper.updateStatus(ticket, 1);
     }
 }
