@@ -116,7 +116,7 @@ public class LoginController implements ActivationStatus {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(Model model, String username, String password, String code,
-                        Boolean rememberMe, HttpSession session, HttpServletResponse response) {
+                        boolean rememberMe, HttpSession session, HttpServletResponse response) {
         // 校验 验证码
         String kaptcha = (String) session.getAttribute("kaptcha");
         if (!kaptcha.equalsIgnoreCase(code) || StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code)) {
