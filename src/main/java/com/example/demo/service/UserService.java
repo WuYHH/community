@@ -169,4 +169,9 @@ public class UserService implements ActivationStatus {
     public LoginTicket findLoginTicket(String ticket) {
         return loginTicketMapper.selectTicket(ticket);
     }
+
+    public int updateHeader(int userId, String headerUrl) {
+        return userMapper.updateHeader(userId, headerUrl);
+    }
+
 }
