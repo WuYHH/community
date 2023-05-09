@@ -163,4 +163,13 @@ public class FirstController {
         System.out.println(httpSession.getAttribute("name"));
         return "get Session";
     }
+
+
+    @RequestMapping(path="/ajax", method = RequestMethod.POST)
+    @ResponseBody
+    public String testAjax(String name, String age) {
+        System.out.println(name);
+        System.out.println(age);
+        return CommunityUtil.getJsonString(100, "success!");
+    }
 }

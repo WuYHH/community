@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class DiscussPost implements Serializable {
     private int id;
-    private int userID;
+    private int userId;
     private String title;
     private String content;
     private int type;
@@ -23,7 +23,7 @@ public class DiscussPost implements Serializable {
     public String toString() {
         return "DiscussPost{" +
                 "id=" + id +
-                ", userID=" + userID +
+                ", userID=" + userId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", type=" + type +
@@ -42,12 +42,12 @@ public class DiscussPost implements Serializable {
         this.id = id;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userID) {
+        this.userId = userID;
     }
 
     public String getTitle() {

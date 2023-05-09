@@ -43,7 +43,7 @@ public class HomePageController {
             for (DiscussPost discussPost : lists) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", discussPost);
-                map.put("user", userService.findUserById(discussPost.getUserID()));
+                map.put("user", userService.findUserById(discussPost.getUserId()));
                 discussPosts.add(map);
             }
         }

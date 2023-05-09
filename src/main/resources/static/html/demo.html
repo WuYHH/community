@@ -16,5 +16,22 @@
         <input type = "submit" value = "save">
     </p>
 </form>
+<input type="button" value="发送" onclick="send();">
+<script>
+    function send() {
+        $.post(
+            "/community/first/ajax",
+            {"name":"liming", "age":25},
+            function (data) {
+                console.log(typeof(data));
+                console.log(data);
+                data = $.parseJSON(data);
+                console.log(data.code);
+                console.log(data.msg);
+            }
+        );
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
