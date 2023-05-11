@@ -57,7 +57,22 @@
   - model封装post数据和user数据
 4. 事务管理
 5. 显示评论
+- 逻辑：
+  - 构建实体类Comment，page分页类
+  - 创建mapper接口，xml文件编写
+  - 创建service，
+  - 创建controller，Model+Page，重定向
+- 技术
+  - 评论：给帖子的评论
+    - post_id
+  - 回复：给评论的评论；给某人的评论
+    - comment_id
+    - target_id（给某人）
+    - entity_id（给评论）
 6. 添加评论
+- 技术:
+  - 事务使用的场景
+  - 事务的隔离级别
 7. 私信列表
 8. 发送私信
 9. 统一处理异常

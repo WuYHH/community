@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.CommentMapper">
+    <sql id="selectFields">
+        id, user_id, entity_type, entity_id, target_id, content, status, create_time
+    </sql>
+    <select id="selectComment" resultType="Comment">
+        select <include refid="selectFields"></include>
+        from comment
+        where entity_type = #{entityType}
+        and entity_id = #{entityId}
+        and status = 0
+        order by create_time asc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectCountByEntity" resultType="int">
+        select count(id)
+        from comment
+        where entity_type = #{entityType}
+        and entity_id = #{entityId}
+        and status = 0
+    </select>
+</mapper>

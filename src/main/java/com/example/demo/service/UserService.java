@@ -4,7 +4,7 @@ import com.example.demo.dao.LoginTicketMapper;
 import com.example.demo.dao.UserMapper;
 import com.example.demo.entity.LoginTicket;
 import com.example.demo.entity.User;
-import com.example.demo.util.ActivationStatus;
+import com.example.demo.util.CommunityContant;
 import com.example.demo.util.CommunityUtil;
 import com.example.demo.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ import java.util.Random;
  * @date 2023/4/24 16:08
  */
 @Service
-public class UserService implements ActivationStatus {
+public class UserService implements CommunityContant {
 
     @Autowired
     private UserMapper userMapper;

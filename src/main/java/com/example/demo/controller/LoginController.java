@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
-import com.example.demo.util.ActivationStatus;
+import com.example.demo.util.CommunityContant;
 import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -31,7 +30,7 @@ import java.util.Map;
  * @date 2023/5/1 21:24
  */
 @Controller
-public class LoginController implements ActivationStatus {
+public class LoginController implements CommunityContant {
     public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
