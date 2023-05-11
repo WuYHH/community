@@ -115,3 +115,48 @@
 2. 项目监控
 3. 项目部署
 4. 项目总结
+
+#### Thymeleaf使用汇总
+1. 使用循环：th:each
+````html
+<ul>
+  // 必须写在<li>标签上
+  <li th:each="student:${students}">
+  </li>
+</ul>
+
+````
+2. 任意标签，任意属性，拼接变量：th:X="|mmmm|"
+````html
+<input  th:placeholder="|回复${vo.user.username}|">
+````
+
+3. 工具类：date
+````html
+<p th:text="${#dates.format(commentVo.comment.createTime, "yyyy-MM-dd HH:mm:ss")}">
+````
+4. 判断语句，如果值为true，**显示标签**；
+````html
+<div th:if="${user.isAdmin}">
+    <p>Welcome, admin!</p>
+</div>
+如果user对象的isAdmin属性为true，则显示欢迎消息。
+````
+5. 在``th:each``中的Stat对象，如果不显式的定义集合的第二个变量iterStat，则默认第一个参数加Stat后缀
+````html
+<tr th:each="prod,iterStat : ${prods}" th:class="${iterStat.odd}? 'odd'">
+<tr th:each="prod : ${prods}" th:class="${prodStat.odd}? 'odd'">
+````
+th:each属性中，定义了如下状态变量：
+- index 属性是当前 迭代器索引（iteration index），从0开始
+- count 属性是当前 迭代器索引（iteration index），从1开始
+- size 属性是迭代器元素的总数
+- current 是当前 迭代变量（iter variable）
+- even/odd 判断当前迭代器是否是 even 或 odd
+- first 判断当前迭代器是否是第一个
+- last 判断当前迭代器是否是最后
+
+6. @{}和${}
+   7. @{}：用于创建URL链接 
+   8. @{#...}：用于引用模板中的片段
+   9. ${...}：用于访问页面上下文中的变量或者Spring MVC Model中的属性
