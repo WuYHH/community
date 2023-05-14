@@ -1,7 +1,7 @@
 package com.example.demo.interceptor;
 
 import com.example.demo.annotation.LoginRequired;
-import com.example.demo.util.HostHolderUtil;
+import com.example.demo.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -20,7 +20,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 
     // 再方法调用前拦截
     @Autowired
-    private HostHolderUtil hostHolderUtil;
+    private CurrentUserUtil currentUserUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -30,7 +30,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
             Method method = handlerMethod.getMethod();
             LoginRequired annotation = method.getAnnotation(LoginRequired.class);
             // 如果存在注解
-            if (annotation != null && hostHolderUtil.getUser() == null ) {
+            if (annotation != null && currentUserUtil.getUser() == null ) {
                 // response的重定向
                 response.sendRedirect(request.getContextPath() + "/login");
                 // 拒绝执行controller

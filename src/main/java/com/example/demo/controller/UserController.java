@@ -4,7 +4,7 @@ import com.example.demo.annotation.LoginRequired;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import com.example.demo.util.CommunityUtil;
-import com.example.demo.util.HostHolderUtil;
+import com.example.demo.util.CurrentUserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +44,7 @@ public class UserController {
 
     // 获取当前用户
     @Autowired
-    private HostHolderUtil hostHolderUtil;
+    private CurrentUserUtil currentUserUtil;
 
     @Autowired
     private UserService userService;
@@ -53,6 +52,7 @@ public class UserController {
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
+//        int i = 1 / 0;
         return "/site/setting";
     }
 
@@ -85,7 +85,7 @@ public class UserController {
         // 更新当前用户的头像路径，即web访问路径
         // http://localhost:8089/community/user/header/xxx.png
         String headerUrl = domain + contextPath + "/user/header/" + filename;
-        User user = hostHolderUtil.getUser();
+        User user = currentUserUtil.getUser();
         userService.updateHeader(user.getId(), headerUrl);
         return "redirect:/index";
     }

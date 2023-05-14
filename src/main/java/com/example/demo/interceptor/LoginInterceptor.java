@@ -1,12 +1,10 @@
 package com.example.demo.interceptor;
 
-import com.example.demo.dao.LoginTicketMapper;
-import com.example.demo.dao.UserMapper;
 import com.example.demo.entity.LoginTicket;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import com.example.demo.util.CookieUtil;
-import com.example.demo.util.HostHolderUtil;
+import com.example.demo.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -27,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     private UserService userService;
 
     @Autowired
-    private HostHolderUtil hostHolderUtil;
+    private CurrentUserUtil currentUserUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -41,7 +39,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 User user = userService.findUserById(loginTicket.getUserId());
                 if (user != null) {
                     // 本次请求中持有用户
-                    hostHolderUtil.setUser(user);
+                    currentUserUtil.setUser(user);
                 }
             }
         }
@@ -51,7 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         // controller处理完后，发送到模板前进行取出
-        User user = hostHolderUtil.getUser();
+        User user = currentUserUtil.getUser();
         if (user != null && modelAndView != null) {
             modelAndView.addObject("currentUser", user);
         }
@@ -59,6 +57,6 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        hostHolderUtil.clear();
+        currentUserUtil.clear();
     }
 }

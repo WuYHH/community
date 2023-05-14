@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/5/5 21:48
  */
 @Component
-public class HostHolderUtil {
+public class CurrentUserUtil {
     private ThreadLocal<User> userThreadLocal = new ThreadLocal<>();
 
     public void setUser(User user) {

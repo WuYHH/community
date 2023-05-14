@@ -2,14 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dao.DiscussPostMapper;
 import com.example.demo.entity.DiscussPost;
-import com.example.demo.entity.User;
-import com.example.demo.util.HostHolderUtil;
 import com.example.demo.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,6 +48,11 @@ public class DiscussPostService {
     }
 
     public DiscussPost selectDiscussPost(int id) {
+
         return discussPostMapper.selectDiscussPost(id);
+    }
+
+    public int updateCommentCount(int id, int commentCount) {
+        return discussPostMapper.updateCommentCount(id, commentCount);
     }
 }

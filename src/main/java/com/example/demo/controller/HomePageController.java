@@ -31,7 +31,7 @@ public class HomePageController {
 
     @RequestMapping(path="/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
-        System.out.println(page);
+//        System.out.println(page);
         // SpringMVC自动实例化page, 且自动将page放入model中
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index");
@@ -49,6 +49,15 @@ public class HomePageController {
         }
         model.addAttribute("discussPost", discussPosts);
         return "/index";
+    }
+
+    /**
+     * 人为处理异常的话，需要手动重定向到500页面；否则，Spring自动处理
+     * @return
+     */
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
     }
 
 }

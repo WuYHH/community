@@ -29,6 +29,9 @@ public class MybatisTests {
     @Autowired
     private LoginTicketMapper loginTicketMapper;
 
+    @Autowired
+    private DiscussPostMapper discussPostMapper;
+
     @Test
     void testSelect() {
         User user = userMapper.selectById(101);
@@ -65,9 +68,6 @@ public class MybatisTests {
         System.out.println(rows);
     }
 
-    @Autowired
-    private DiscussPostMapper discussPostMapper;
-
     @Test
     void testDiscussPost() {
         List<DiscussPost> discussPosts =
@@ -101,6 +101,12 @@ public class MybatisTests {
     @Test
     void testUpdateTicket() {
         int rows = loginTicketMapper.updateStatus("5ca8c52720924e7bbc7f70f697782bf6", 0);
+        System.out.println(rows);
+    }
+
+    @Test
+    void testUpdateCount() {
+        int rows = discussPostMapper.updateCommentCount(283, 996);
         System.out.println(rows);
     }
 }

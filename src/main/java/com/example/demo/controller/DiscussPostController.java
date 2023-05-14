@@ -9,7 +9,7 @@ import com.example.demo.service.DiscussPostService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.CommunityContant;
 import com.example.demo.util.CommunityUtil;
-import com.example.demo.util.HostHolderUtil;
+import com.example.demo.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +35,7 @@ public class DiscussPostController implements CommunityContant {
     private CommentService commentService;
 
     @Autowired
-    private HostHolderUtil hostHolderUtil;
+    private CurrentUserUtil currentUserUtil;
 
     @Autowired
     private UserService userService;
@@ -45,7 +45,7 @@ public class DiscussPostController implements CommunityContant {
     @ResponseBody
     public String addPost(String title, String content) {
         // 获取当前登录用户信息
-        User user = hostHolderUtil.getUser();
+        User user = currentUserUtil.getUser();
         if (user == null) {
             return CommunityUtil.getJsonString(403, "你还没有登录！");
         }
