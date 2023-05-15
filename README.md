@@ -78,6 +78,17 @@
   - 前端属性name通过表单发送时，可以组合为一个Comment类，controller可以定义Comment类为形参。
   - 隐藏标签``<input type="inhidden">``可以用来发送属性。
 7. **私信列表**
+- 逻辑：
+  - conversation_id由**from_id**和**to_id**组成，是表的**冗余字段**，构成时默认111_222,即小号id在前，大号id在后
+  - 一次会话(conversation)包含多次私信(message)，显示的时候，只显示最近的一条消息（判断最近？max(id)或者createTime）
+  - 当前用户既是from_id，又是to_id
+  - Message既是会话，又是消息
+  - 系统私信：from_id = 1; 用户私信：from_id != 1
+  - 显示某个会话的私信详情时，从from_id中提取用户作为当前私信的发出者
+- 技术
+  - 获取只显示最新消息的会话列表的SQL语句（嵌套查询）
+  - 查询详情时，需要在url连接带上必要的id信息，例如/letter/list/{conversationId}
+  - thymeleaf字符串的拼接|xxx|
 8. **发送私信**
 9. **统一处理异常**
 - 逻辑：

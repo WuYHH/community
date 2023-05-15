@@ -4,20 +4,20 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-@Data
+
 /**
  * @author wuyuhan
- * @date 2023/4/24 15:28
+ * @date 2023/5/15 09:31
  */
-public class DiscussPost implements Serializable {
+@Data
+public class Message implements Serializable {
+
     private int id;
-    private int userId;
-    private String title;
+    private int fromId;
+    private int toId;
+    private String conversationId;
     private String content;
-    private int type;
     private int status;
     private Date createTime;
-    // 冗余字段
-    private int commentCount;
-    private double score;
+
 }
