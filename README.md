@@ -193,3 +193,7 @@ th:each属性中，定义了如下状态变量：
    7. @{}：用于创建URL链接 
    8. @{#...}：用于引用模板中的片段
    9. ${...}：用于访问页面上下文中的变量或者Spring MVC Model中的属性
+7. 使用`|XXX|`拼接字符串，可以拼接连接，可以拼接class
+```html
+<a th:href="@{|/letter/detail/${map.conversation.conversationId}|}"></a>
+```
