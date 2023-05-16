@@ -5,6 +5,7 @@ import com.example.demo.entity.Page;
 import com.example.demo.entity.User;
 import com.example.demo.service.MessageService;
 import com.example.demo.service.UserService;
+import com.example.demo.util.CommunityUtil;
 import com.example.demo.util.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wuyuhan
@@ -35,6 +34,30 @@ public class MessageController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(path = "/send", method = RequestMethod.POST)
+    @ResponseBody
+    public String sendMessage(String toName, String content) {
+        User targetUser = userService.findUserByName(toName);
+        if (targetUser == null) {
+            return CommunityUtil.getJsonString(1, "目标用户不存在");
+        }
+        Message message = new Message();
+        message.setContent(content);
+        message.setCreateTime(new Date());
+        message.setStatus(0);
+        int fromUserId = currentUser.getUser().getId();
+        message.setFromId(fromUserId);
+        int targetId = targetUser.getId();
+        message.setToId(targetId);
+        String conversationId = fromUserId < targetId ? fromUserId + "_" + targetId : targetId + "_" + fromUserId;
+        message.setConversationId(conversationId);
+
+        messageService.addMessage(message);
+
+        return CommunityUtil.getJsonString(0, "发送成功！");
+    }
+
+
     @RequestMapping(path = "/detail/{conversationId}", method = RequestMethod.GET)
     public String getMessage(Model model, Page page, @PathVariable("conversationId") String conversationId) {
         // 设置消息分页
@@ -45,8 +68,12 @@ public class MessageController {
         // 获取消息列表
         List<Message> messages = messageService.findMessages(conversationId, page.getOffset(), page.getLimit());
         List<Map<String, Object>> messageList = new ArrayList<>();
+        List<Integer> unreadList = new ArrayList<>();
         if (messageList != null) {
             for (Message message : messages) {
+                if (message.getStatus() == 0 && currentUser.getUser().getId() == message.getToId()) {
+                    unreadList.add(message.getId());
+                }
                 Map<String, Object> map = new HashMap<>();
                 map.put("message", message);
                 map.put("fromUser", userService.findUserById(message.getFromId()));
@@ -57,6 +84,11 @@ public class MessageController {
 
         // 在消息外面包装私信目标，处理"来自xxx的私信"
         model.addAttribute("target", getMessageTarget(conversationId));
+
+        // 修改未读消息的状态
+        if (unreadList != null && unreadList.size() != 0) {
+            messageService.updateStatus(unreadList,1);
+        }
 
         return "/site/letter-detail";
     }
@@ -104,6 +136,7 @@ public class MessageController {
         // 查询未读消息数量
         int totalUnreadCount = messageService.findUnreadCount(userId, null);
         model.addAttribute("totalUnreadCount", totalUnreadCount);
+
 
         return "/site/letter";
     }

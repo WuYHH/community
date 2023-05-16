@@ -47,6 +47,10 @@ public class UserService implements CommunityContant {
         return userMapper.selectById(id);
     }
 
+    public User findUserByName(String username) {
+        return userMapper.selectByName(username);
+    }
+
     /**
      * @param user
      * @return 注册可能会有多种结果，所以返回值为Map<></>

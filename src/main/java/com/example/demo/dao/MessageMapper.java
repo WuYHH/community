@@ -44,4 +44,14 @@ public interface MessageMapper {
      */
     int findMessageUnreadCount(int currentUserId, String conversationId);
 
+    int insertMessage(Message message);
+
+    /**
+     * 更新私信状态
+     * @param ids
+     * @param status
+     * @return
+     */
+    int updateStatus(List<Integer> ids, int status);
+
 }

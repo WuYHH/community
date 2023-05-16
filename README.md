@@ -90,6 +90,8 @@
   - 查询详情时，需要在url连接带上必要的id信息，例如/letter/list/{conversationId}
   - thymeleaf字符串的拼接|xxx|
 8. **发送私信**
+- 逻辑
+  - 将未读状态修改为已读状态的实现
 9. **统一处理异常**
 - 逻辑：
   - 异常将会从dao层传递到controller层
