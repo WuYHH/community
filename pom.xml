@@ -8,11 +8,11 @@
         <version>2.7.10</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>com.dlut</groupId>
     <artifactId>community</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo3</name>
-    <description>demo3</description>
+    <name>community</name>
+    <description>community</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -79,6 +79,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>3.0.5</version>
         </dependency>
 
 

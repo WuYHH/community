@@ -1,0 +1,25 @@
+package com.dlut.community;
+
+import com.dlut.community.util.SensitiveFilter;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+
+/**
+ * @author wuyuhan
+ * @date 2023/5/8 16:10
+ */
+@SpringBootTest
+@ContextConfiguration(classes = CommunityApplication.class)
+public class SensitiveTests {
+
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
+    @Test
+    void testFilter() {
+        String words = sensitiveFilter.filter("llll, ⭐吸⭐毒⭐，哈哈哈哈");
+        System.out.println(words);
+    }
+}

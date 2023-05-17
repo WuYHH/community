@@ -81,7 +81,7 @@
         </filter>
     </appender>
 
-    <logger name="com.example.demo" level="debug"/>
+    <logger name="com.dlut.community" level="debug"/>
 
     <root level="info">
         <appender-ref ref="FILE_ERROR"/>
