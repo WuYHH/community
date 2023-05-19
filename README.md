@@ -134,6 +134,8 @@
       - 局部刷新：用户点击后，AJAX请求走/like, 更新用户点击后的状态
       - 全局刷新：刷新页面后，走/discuss/detail/{postId}，Model对象更新赞的状态和数量
       - 如果仅有局部刷新，用户刷新后会再次失去所有值
+    - 用set存放实体的点赞，因为set不重复，所以只会有唯一的userId。
+    - 实体点赞的key的设计：`like:entity: entityType:entityId  --> set(userId),`
 4. 我收到的赞
 - 逻辑：
   - 用户点赞的同时，更新被点赞用户的点赞数量，采用redis的事务来解决
@@ -142,6 +144,8 @@
     - 帖子点赞
     - 评论点赞
   - key_value的构造
+  - 在页面构造url请求时，如果想带上当前页面的信息，如userId,形式必须使用``|XX|``拼接，形式如下：
+    - ``th:href="@{|/profile/${user.id}|}"``, 然后controller使用@PathVariable接收参数。
 5. 关注、取消关注
 6. 关注列表、粉丝列表
 7. 优化登录模块
