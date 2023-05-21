@@ -19,22 +19,22 @@ public class FirstService {
     @Autowired
     @Qualifier("mybatisImpl")
     private FirstDao firstDao;
-//
-//    public String find() {
-//        return firstDao.select();
-//    }
-//    public FirstService() {
-//        System.out.println("实例化firstService");
-//    }
-//
-//    @PostConstruct
-//    public void init() {
-//        System.out.println("初始化firstService");
-//    }
-//
-//    @PreDestroy
-//    public void destroy() {
-//        System.out.println("准备销毁firstService");
-//    }
+
+    public String find() {
+        return firstDao.select();
+    }
+    public FirstService() {
+        System.out.println("实例化firstService");
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("初始化firstService");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("准备销毁firstService");
+    }
 
 }

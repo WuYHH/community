@@ -69,10 +69,13 @@ public class LikeController implements CommunityContant {
         model.addAttribute("followeeCount", followeeCount);
 
         // 当前profile用户是否已经被关注
-        boolean hasFollowed =
-                followService.hasFollowed(currentUserUtil.getUser().getId(), ENTITY_TYPE_USER, userId);
-        model.addAttribute("followStatus", hasFollowed);
-
+        if (currentUserUtil.getUser() != null) {
+            boolean hasFollowed =
+                    followService.hasFollowed(currentUserUtil.getUser().getId(), ENTITY_TYPE_USER, userId);
+            model.addAttribute("followStatus", hasFollowed);
+        } else {
+            return "/site/login";
+        }
         return "/site/profile";
     }
 }
