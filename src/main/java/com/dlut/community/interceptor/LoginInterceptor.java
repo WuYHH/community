@@ -51,6 +51,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         // controller处理完后，发送到模板前进行取出
         User user = currentUserUtil.getUser();
         if (user != null && modelAndView != null) {
+            // 所有的界面可以共享当前登录用户
             modelAndView.addObject("currentUser", user);
         }
     }

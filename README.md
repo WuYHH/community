@@ -147,6 +147,16 @@
   - 在页面构造url请求时，如果想带上当前页面的信息，如userId,形式必须使用``|XX|``拼接，形式如下：
     - ``th:href="@{|/profile/${user.id}|}"``, 然后controller使用@PathVariable接收参数。
 5. 关注、取消关注
+- 逻辑：
+用户关注某个人的同时，用户的关注列表更新，被关注列表的粉丝更新，必须同时进行。
+  - 关注：
+    - Follower(粉丝)：构造Redis ID
+    
+    - Followee(目标)：构造ID
+- 技术：
+  - 当前登录用户和访问用户界面详情时同一个人的话，采用th:if语句判断，这里获取登录用户时，采用的是LoginTicketInterceptor中的数据，而**不是自己**在LikeController里model加入的
+    - LoginInterceptor拦截所有controller执行后的请求，加入当前用户，所有页面都可以共享登录用户
+    - ThreadLocal获取当前用户
 6. 关注列表、粉丝列表
 7. 优化登录模块
 
