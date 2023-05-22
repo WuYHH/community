@@ -15,15 +15,15 @@ import javax.mail.internet.MimeMessage;
  * @author wuyuhan
  * @date 2023/4/29 21:20
  */
-@Component
+//@Component
 public class MailClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
 
-    @Autowired
+//    @Autowired
     private JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username}")
+//    @Value("${spring.mail.username}")
     private String from;
 
     public void sendMail(String to, String subject, String content) {

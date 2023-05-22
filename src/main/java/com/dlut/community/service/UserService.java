@@ -32,8 +32,8 @@ public class UserService implements CommunityContant {
     @Autowired
     private LoginTicketMapper loginTicketMapper;
 
-    @Autowired
-    private MailClient mailClient;
+//    @Autowired
+//    private MailClient mailClient;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -105,7 +105,7 @@ public class UserService implements CommunityContant {
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
-        mailClient.sendMail(user.getEmail(), "激活账号", content);
+//        mailClient.sendMail(user.getEmail(), "激活账号", content);
         // 注册成功则返回空的map
         return map;
     }
