@@ -158,8 +158,27 @@
     - LoginInterceptor拦截所有controller执行后的请求，加入当前用户，所有页面都可以共享登录用户
     - ThreadLocal获取当前用户
 6. 关注列表、粉丝列表
+- 逻辑：查询列表时需要带上当前用户的id，针对列表的每一项，分析Map中需要携带的数据，构造List<Map>存入Model中
+- 技术：
+  - 获取zset中的**元素**和对应的**分数**，这里分数为**关注时间**，关注时间是从redis中取出来的
+  - 获取关注状态，复用之前的逻辑，判定当前登录用户a查询的用户b的所有的关注人c，如果a关注了c那么显示已关注，否则未关注。
+  - 前端页面同样采用ajax更新已关注还是未关注
 7. 优化登录模块
-
+- 逻辑：
+  - 采用redis优化验证码逻辑：
+    - RedisKeyUtil构建key前缀的工具
+    - 用户点击登录按钮，发送"/login"的GET请求，跳转到"/site/login/"页面
+    - 显示登录页面，验证码自动发送url请求"/kaptcha"，到LoginController中
+    - 获取验证码文本text，随机生成UUID，构建cookie，通过response为浏览器发送凭证id，并利用UUID构建redisKey，将验证码text存入redis，设置过期时间，然后response通过输出流写入到浏览器端，形成验证码图片。
+    - 用户填写完表单，点击提交按钮时，发送发送"/login"的POST请求，到LoginController中，通过@CookieValue获取刚才发送给浏览器的cookie，验证cookie，如果该cookie存在，构建redisKey，从redis中取出验证码文本值。
+  - redis存储登录凭证，不再使用login_ticket
+    - 不再使用LoginTicketMapper
+    - 不对Redis设置过期时间，让redis存储整个LoginTicket对象<key, LoginTicket>
+  - redis优化查询用户登录信息
+    - 三种逻辑
+      - 优先从缓存中取值。
+      - 取不到值时从数据库中取，然后存入redis中，初始化缓存数据。
+      - 更新时删除缓存，如用户状态变更、用户更换头像等。
 ### 第五章
 1. 阻塞队列
 2. kafka入门

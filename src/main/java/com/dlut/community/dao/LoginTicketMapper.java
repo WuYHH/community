@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.*;
  * @date 2023/5/5 14:42
  */
 @Mapper
+@Deprecated// 采用redis优化，不走数据库了
 public interface LoginTicketMapper {
 
     /**
