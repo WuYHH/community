@@ -189,6 +189,11 @@
 3. 项目部署
 4. 项目总结
 
+#### idea调试技巧
+1. 使用debug模式启动(每一次)
+2. 打断点，或者选择某些断点执行，侧边栏：view breakpoints
+3. 如果想让前端页面在**执行断点**后继续向下执行，需要点击 resume applcation, 此时不必重新启动
+
 #### Thymeleaf使用汇总
 1. 使用循环：th:each
 ````html

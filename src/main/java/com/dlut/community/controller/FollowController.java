@@ -34,6 +34,12 @@ public class FollowController implements CommunityContant {
     @Autowired
     private UserService userService;
 
+    /**
+     * 通过异步请求改变关注状态
+     * @param entityType
+     * @param entityId
+     * @return
+     */
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -54,7 +60,7 @@ public class FollowController implements CommunityContant {
     public String getFollowerList(@PathVariable("userId") int userId, Model model, Page page) {
         // 配置分页信息
         page.setLimit(5);
-        page.setPath("/follower/" + userId);
+        page.setPath("/followee/" + userId);
         page.setRows((int) followService.getFolloweeCount(userId, ENTITY_TYPE_USER));
 
         List<Map<String, Object>> followeeList = followService.getFolloweeList(userId, page.getOffset(), page.getLimit());
