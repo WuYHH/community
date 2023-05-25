@@ -34,6 +34,10 @@ public class ServiceLogAspect {
         // 用户[1.2.3.4] 在 [xxx]，访问了[com.example.demo.service.xxx()]
         // RequestContextHolder工具类获取Request，而不是在方法上加参数
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        // 如果不是通过controller调用service，则attributes为空
+        if (attributes == null) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest();
         String ip = request.getRemoteHost();
         String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

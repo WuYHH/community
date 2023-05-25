@@ -143,16 +143,17 @@
   - 点赞实体：
     - 帖子点赞
     - 评论点赞
-  - key_value的构造
+  - **key_value的构造**，参考"关注、取消关注"中的key的设计。
   - 在页面构造url请求时，如果想带上当前页面的信息，如userId,形式必须使用``|XX|``拼接，形式如下：
     - ``th:href="@{|/profile/${user.id}|}"``, 然后controller使用@PathVariable接收参数。
 5. 关注、取消关注
 - 逻辑：
 用户关注某个人的同时，用户的关注列表更新，被关注列表的粉丝更新，必须同时进行。
   - 关注：
-    - Follower(粉丝)：构造Redis ID
-    
-    - Followee(目标)：构造ID
+    - Follower(粉丝)：构造Redis ID，其中redis采用zset数据结构，分数score为日期信息
+      某个用户关注的实体：`followee:userId:entityType --> zset(entityId, nowDate)`
+    - Followee(目标)：构造ID，同样采用zset
+      某个实体类型拥有的粉丝(人)：`follower:entityType:entityId --> zset(userId, nowDate)`
 - 技术：
   - 当前登录用户和访问用户界面详情时同一个人的话，采用th:if语句判断，这里获取登录用户时，采用的是LoginTicketInterceptor中的数据，而**不是自己**在LikeController里model加入的
     - LoginInterceptor拦截所有controller执行后的请求，加入当前用户，所有页面都可以共享登录用户
@@ -178,12 +179,64 @@
     - 三种逻辑
       - 优先从缓存中取值。
       - 取不到值时从数据库中取，然后存入redis中，初始化缓存数据。
-      - 更新时删除缓存，如用户状态变更、用户更换头像等。
+      - 更新时删除缓存（而非更改缓存），如用户状态变更、用户更换头像等。
 ### 第五章
 1. 阻塞队列
 2. kafka入门
+- 特点：
+   3. 高吞吐量
+   4. 消息持久化，持久化到硬盘，顺序读取性能>内存随机读取的性能
+   5. 异步处理，不会阻塞当前线程
+- 概念：
+   5. broker：服务器
+   6. zookeeper：管理集群（单独安装或者集成）
+   7. Topic：主题
+   8. Partition：Topic的分区
+   9. offset：消息在partition的位置
+   10. Leader Replica：副本
+   11. 
 3. Spring整合kafka
+- 技术：自动监听：消费者中配置`@KafkaListener(topics = {"test"}, test为主题名称)`
 4. 发送系统通知
+- 逻辑:
+  - 面向**事件**编程，封装主题、数据、冗余数据，整个事件将以**JSON格式**传输。
+    - topic
+    - userId：哪个用户id发起的消息
+    - entityType
+    - entityId
+    - entityUserId：实体entity所属的用户id
+    - data(冗余数据)
+  - 消费者获取到事件后，需要将事件Event-->消息Message
+    - 构建消息content，增加事件的额外信息
+  - 构建评论消息时，需要增加额外数据`postId`,方便跳转到帖子详情页
+  - 三种事件处理
+    - 点赞事件：
+      - 需要跳转帖子详情页面，需要`postId`信息，需要从前端页面ajax请求传入该信息（方法增加int postId形参）
+      - 其他信息与异步方法携带的参数一致
+      - 有附加数据data，内容为`postId`
+    - 关注事件：
+      - entityUserId 与 entityId一致，因为目前只有关注人的逻辑
+      - 无附加数据 data，因为不需要跳转
+    - 评论事件
+      - 需要跳转帖子详情页面，需要`postId`信息，该信息通过区分**评论种类**加入到event中，有**两种评论**：
+        - 评论回复：CommentService获取回复Comment，通过该类获取被回复的用户Id（发布该评论的用户），注入entityUserId
+        - 评论帖子：DiscussPostService获取帖子DiscussPost，通过该类获取被回复的用户Id(发布该帖子的用户)，注入entityUserId
+      - 有附加数据data，内容为`postId`
+  - 三种数据区分：
+    - 事件Event
+    - 消息Message
+      - xxx 数据库中的字段
+      - 内容Content，需要拼成JSON字符串，为了构造消息：用户 xxxx 关注/点赞/评论 了你/你的帖子 
+        - userId
+        - entityType
+        - entityId
+        - data（如果能从Event中获取）
+  - 整体数据流程：
+    - 基于事件驱动，构建生产者和消费者，在每一个业务逻辑，点赞/关注/评论逻辑中调用生产者，正确的封装Event事件（是否封装data用于跳转、评论中的entityUserId是postid
+    还是commentId）
+    - 消费者的逻辑为根据获得的Event事件的Topic主题构建Message信息，通过Service插入到数据表中。
+  - 在消费者中直接调用Service，会导致ServiceLogAspect中的request请求为空，因为没有走Controller层导致attributes为空。
+    
 5. 显示系统通知
 
 ### 第六章

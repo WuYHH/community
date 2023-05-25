@@ -17,7 +17,17 @@ public interface CommunityContant {
     int DEFAULT_EXPIRED_SECONDS = 1000 * 60 * 60000;
 
     int ENTITY_TYPE_POST = 1;
+
     int ENTITY_TYPE_REPALY = 2;
+
     int ENTITY_TYPE_USER = 3;
+
+    String KAFKA_TOPIC_LIKE = "like";
+
+    String KAFKA_TOPIC_POST = "comment";
+
+    String KAFKA_TOPIC_FOLLOW = "follow";
+
+    int SYSTEM_USER_ID = 1;
 
 }

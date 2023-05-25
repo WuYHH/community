@@ -1,6 +1,8 @@
 package com.dlut.community.controller;
 
+import com.dlut.community.entity.Event;
 import com.dlut.community.entity.User;
+import com.dlut.community.event.EventProducer;
 import com.dlut.community.service.FollowService;
 import com.dlut.community.service.LikeService;
 import com.dlut.community.service.UserService;
@@ -37,15 +39,34 @@ public class LikeController implements CommunityContant {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
-    public String operateLogic(int entityType, int entityId, int entityUserId) {
+    public String operateLogic(int entityType, int entityId, int entityUserId, int postId) {
         User currentUser = currentUserUtil.getUser();
         // 点赞
         likeService.like(entityType, entityId, currentUser.getId(),entityUserId);
         Map<String, Object> map = new HashMap<>();
-        map.put("likeStatus", likeService.getLikeStatus(entityType, entityId, currentUser.getId()));
+        int likeStatus = likeService.getLikeStatus(entityType, entityId, currentUser.getId());
+        map.put("likeStatus", likeStatus);
         map.put("likeCount", likeService.getLikeCount(entityType, entityId));
+
+        if (likeStatus == 1) {
+            // 点赞成功才触发消息
+            // 发送点赞消息
+            // 构建 event
+            Event event = new Event();
+            event.setTopic(KAFKA_TOPIC_LIKE)
+                    .setUserId(currentUser.getId())
+                    .setEntityType(entityType)
+                    .setEntityId(entityId)
+                    .setEntityUserId(entityUserId)
+                            .setData("postId", postId);
+
+            eventProducer.sendMessage(event);
+        }
         return CommunityUtil.getJsonString(0, "获取点赞相关信息成功！", map);
     }
 

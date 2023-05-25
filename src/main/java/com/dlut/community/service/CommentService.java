@@ -64,4 +64,8 @@ public class CommentService implements CommunityContant {
         }
         return rows;
     }
+
+    public Comment selectCommentById(int entityId) {
+        return commentMapper.selectCommentById(entityId);
+    }
 }

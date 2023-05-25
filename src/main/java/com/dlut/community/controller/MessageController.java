@@ -3,6 +3,7 @@ package com.dlut.community.controller;
 import com.dlut.community.entity.Message;
 import com.dlut.community.entity.Page;
 import com.dlut.community.entity.User;
+import com.dlut.community.event.EventProducer;
 import com.dlut.community.service.MessageService;
 import com.dlut.community.service.UserService;
 import com.dlut.community.util.CommunityUtil;
@@ -33,6 +34,9 @@ public class MessageController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EventProducer eventProducer;
 
     @RequestMapping(path = "/send", method = RequestMethod.POST)
     @ResponseBody

@@ -23,7 +23,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER = "user";
 
 
-    // 对实体点赞
+    // 对实体点赞(这个其实也可以用zset)
     // like:entity: entityType:entityId  --> set(userId),
     public static String getEntityLike(int entityType, int entityId) {
         return ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;

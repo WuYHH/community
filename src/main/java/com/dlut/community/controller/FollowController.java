@@ -1,7 +1,9 @@
 package com.dlut.community.controller;
 
+import com.dlut.community.entity.Event;
 import com.dlut.community.entity.Page;
 import com.dlut.community.entity.User;
+import com.dlut.community.event.EventProducer;
 import com.dlut.community.service.FollowService;
 import com.dlut.community.service.UserService;
 import com.dlut.community.util.CommunityContant;
@@ -29,6 +31,9 @@ public class FollowController implements CommunityContant {
     private FollowService followService;
 
     @Autowired
+    private EventProducer eventProducer;
+
+    @Autowired
     private CurrentUserUtil currentUser;
 
     @Autowired
@@ -45,6 +50,16 @@ public class FollowController implements CommunityContant {
     public String follow(int entityType, int entityId) {
         int userId = currentUser.getUser().getId();
         followService.follow(userId, entityType, entityId);
+
+        Event event = new Event()
+                .setTopic(KAFKA_TOPIC_FOLLOW)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setUserId(userId)
+                .setEntityUserId(entityId);// 默认关注人
+
+        eventProducer.sendMessage(event);
+
         return CommunityUtil.getJsonString(0, "关注成功！");
     }
 
