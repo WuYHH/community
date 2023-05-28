@@ -238,7 +238,13 @@
   - 在消费者中直接调用Service，会导致ServiceLogAspect中的request请求为空，因为没有走Controller层导致attributes为空。
     
 5. 显示系统通知
-
+- 查询未读数量逻辑的复用
+- 三种通知详情罗技共用一个界面，th:if进行判定是否显示<li>标签
+- 拦截器获得消息数量时拦截的时机判定？为什么要用拦截器判定？
+- 首先展示最新数据，但是并不进行list列表查询，等到点击最新数据时，重新发送连接到请求。
+- 区别userId与entityUserId
+  - Event事件中的userId封装的是当前登录用户A，entityUserId封装的是用户A操作的用户B
+  - 当消息（封装topic）发送成功后，用户B开始登录，Message里面的to_id字段的值就变成了上述的entityUserId，即用户B的id，content里的userId就变成了用户A的id，所以从content里取出的userId是其他用户（相对于当前用户）。
 ### 第六章
 1. Elasticsearch
 2. Spring整合elasticsearch
