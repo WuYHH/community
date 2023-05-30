@@ -221,4 +221,45 @@ public class MessageController implements CommunityContant {
         model.addAttribute("noticeUnreadCount", noticeUnreadCount);
         return "/site/notice";
     }
+
+    @RequestMapping(path = "/notice/detail/{topic}", method = RequestMethod.GET)
+    public String getNoticeListByTopic(Model model, Page page,
+                                       @PathVariable(value = "topic") String topic) {
+        // 获取当前登录用户
+        int userId = currentUser.getUser().getId();
+
+        // 设置分页信息
+        page.setLimit(5);
+        page.setPath("/letter/notice/detail/" + topic);
+        page.setRows(messageService.findNoticeCount(topic, userId));
+
+        List<Message> noticeList = messageService.findNoticeByTopic(topic, userId, page.getOffset(), page.getLimit());
+        List<Map<String, Object>> noticeVoList = new ArrayList<>();
+        List<Integer> unreadList = new ArrayList<>();
+        if (noticeList != null) {
+            for (Message notice : noticeList) {
+                unreadList.add(notice.getId());
+                Map<String, Object> noticeVO = new HashMap<>();
+                noticeVO.put("notice", notice);
+                String content = HtmlUtils.htmlUnescape(notice.getContent());
+                Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
+                User fromUser = userService.findUserById((Integer) data.get("userId"));
+                noticeVO.put("fromUser", fromUser);
+                noticeVO.put("entityType", data.get("entityType"));
+                noticeVO.put("entityId", data.get("entityId"));
+                noticeVO.put("postId", data.get("postId"));
+                noticeVoList.add(noticeVO);
+            }
+        }
+
+        // 设置已读
+        // 修改未读消息的状态
+        if (unreadList != null && unreadList.size() != 0) {
+            messageService.updateStatus(unreadList,1);
+        }
+
+        model.addAttribute("noticeVoList", noticeVoList);
+        return "/site/notice-detail";
+
+    }
 }

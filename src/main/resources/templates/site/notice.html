@@ -88,7 +88,7 @@
 								</span>
 							</h6>
 							<div>
-								<a href="notice-detail.html">用户 <i th:utext="${commentNotice.fromUser.username}">nowcoder</i> 评论了你的
+								<a th:href="@{/letter/notice/detail/comment}">用户 <i th:utext="${commentNotice.fromUser.username}">nowcoder</i> 评论了你的
 									<b th:href="@{|/detail/${commentNotice.postId}|}"
 									th:text="${commentNotice.entityType == 1?'帖子':'回复'}">帖子</b> ...</a>
 								<ul class="d-inline font-size-12 float-right">
@@ -111,7 +111,7 @@
 								>2019-04-28 14:13:25</span>
 							</h6>
 							<div>
-								<a href="notice-detail.html">用户 <i th:utext="${likeNotice.fromUser.username}">nowcoder</i> 点赞了你的<b th:href="@{|/detail/${commentNotice.postId}|}">帖子</b> ...</a>
+								<a th:href="@{/letter/notice/detail/like}">用户 <i th:utext="${likeNotice.fromUser.username}">nowcoder</i> 点赞了你的<b th:href="@{|/detail/${commentNotice.postId}|}">帖子</b> ...</a>
 								<ul class="d-inline font-size-12 float-right">
 									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${likeNotice.noticeCount}">3</i> 条会话</span></li>
 								</ul>
@@ -132,7 +132,7 @@
 								>2019-04-28 14:13:25</span>
 							</h6>
 							<div>
-								<a href="notice-detail.html">用户 <i th:utext="${followNotice.fromUser.username}">nowcoder</i> 关注了你 ...</a>
+								<a th:href="@{/letter/notice/detail/follow}">用户 <i th:utext="${followNotice.fromUser.username}">nowcoder</i> 关注了你 ...</a>
 								<ul class="d-inline font-size-12 float-right">
 									<li class="d-inline ml-2"><span class="text-primary">共 <i th:text="${followNotice.noticeCount}">3</i> 条会话</span></li>
 								</ul>

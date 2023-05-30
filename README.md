@@ -245,6 +245,14 @@
 - 区别userId与entityUserId
   - Event事件中的userId封装的是当前登录用户A，entityUserId封装的是用户A操作的用户B
   - 当消息（封装topic）发送成功后，用户B开始登录，Message里面的to_id字段的值就变成了上述的entityUserId，即用户B的id，content里的userId就变成了用户A的id，所以从content里取出的userId是其他用户（相对于当前用户）。
+- Controller中获取通知列表的逻辑：方法中的Page和传入的Topic会自动存入Model中，可以在/site/notice-detail页面中直接调用page和topic字段。例如：
+```C
+    @RequestMapping(path = "/notice/detail/{topic}", method = RequestMethod.GET)
+    public String getNoticeListByTopic(Model model, Page page,
+                                       @PathVariable(value = "topic") String topic) {
+        return "/site/notice-detail";
+        }
+```
 ### 第六章
 1. Elasticsearch
 2. Spring整合elasticsearch
@@ -319,4 +327,8 @@ th:each属性中，定义了如下状态变量：
 7. 使用`|XXX|`拼接字符串，可以拼接连接，可以拼接class
 ```html
 <a th:href="@{|/letter/detail/${map.conversation.conversationId}|}"></a>
+```
+8使用`A.equals(B)`比较字符串
+```html
+<span th:if="${topic.equals('follow')}">
 ```
